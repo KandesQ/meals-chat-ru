@@ -6,6 +6,7 @@ from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from dotenv import load_dotenv
 
+from routes.add_meal import add_meal_router
 from routes.help import help_router
 from templates.rendering import render_template
 
@@ -14,6 +15,7 @@ load_dotenv()
 dp = Dispatcher()
 
 dp.include_router(help_router)
+dp.include_router(add_meal_router)
 
 
 kb_builder = ReplyKeyboardBuilder()
