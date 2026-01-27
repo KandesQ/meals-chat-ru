@@ -7,8 +7,8 @@ _env = Environment(
     )
 )
 
-def render_template(name: str) -> str:
-    rendered = _env.get_template(name).render()
+def render_template(name: str, **kwargs) -> str:
+    rendered = _env.get_template(name).render(**kwargs)
 
     # Адекватный способ экранировать newline не встретил
     rendered = rendered.replace("\n", " ")

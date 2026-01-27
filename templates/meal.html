@@ -1,0 +1,17 @@
+✅ Сохранено. Вы добавили: <b>{{ meal_name }}</b>
+<br><br>
+<b>Калории</b>
+<br><br>
+{{ calories }} ккал
+<br><br>
+<b>БЖУ</b>
+<br><br>
+• Белки: {{ protein_grams }} г<br>
+• Углеводы: {{ carbs_grams }} г<br>
+• Жиры: {{ fat_grams }} г
+<br><br>
+<b>Вероятные ингредиенты</b>
+<br><br>
+{% for ingredient in likely_ingredients %}
+• {{ ingredient }}<br>
+{% endfor %}

@@ -12,6 +12,7 @@ TEXT_COMMANDS = [
     "✏️ Добавить блюдо"
 ]
 COMMANDS = [
+    "/start",
     "/help",
     "/add",
     "/stats",
@@ -49,9 +50,7 @@ class FlowResolver(BaseMiddleware):
 
         # Команда
         text = msg.text
-        existing_text_command = text in TEXT_COMMANDS
-        existing_command = text in COMMANDS
-        if existing_command or existing_text_command:
+        if text in TEXT_COMMANDS or text in COMMANDS:
             return await handler(msg, data)
 
         # Текстовое описание еды (возможен мусорный текст. Возможно оптимизировать запросы к модели)

@@ -41,6 +41,7 @@ ormsgpack==1.12.2
 packaging==25.0
 pluggy==1.6.0
 propcache==0.4.1
+psycopg2-binary==2.9.11
 pydantic==2.12.5
 pydantic_core==2.41.5
 Pygments==2.19.2
