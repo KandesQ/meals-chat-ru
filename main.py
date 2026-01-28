@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 from FlowResolver import FlowResolver
 from routes.add_meal import add_meal_router
+from routes.feedback import feedback_router
 from routes.help import help_router
 from templates.rendering import render_template
 
@@ -30,6 +31,7 @@ dp.message.outer_middleware(FlowResolver())
 
 dp.include_router(help_router)
 dp.include_router(add_meal_router)
+dp.include_router(feedback_router)
 
 
 kb_builder = ReplyKeyboardBuilder()
