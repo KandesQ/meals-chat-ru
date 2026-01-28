@@ -13,5 +13,5 @@
 <b>Вероятные ингредиенты</b>
 <br><br>
 {% for ingredient in likely_ingredients %}
-• {{ ingredient }}<br>
+• {{ ingredient.name }} ({{ ingredient.grams }}г, {{ ingredient.calories }}ккал)<br>
 {% endfor %}

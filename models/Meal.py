@@ -4,9 +4,10 @@ from sqlalchemy import BigInteger, Integer, Numeric, JSON, String, DateTime, fun
 from sqlalchemy.orm import mapped_column
 
 from models.Base import Base
+from models.Ingredient import Ingredient
 
 
-class _LikelyIngredients(TypeDecorator):
+class Ingredients(TypeDecorator):
     impl = JSON
     cache_ok = True
 
@@ -23,21 +24,14 @@ class _LikelyIngredients(TypeDecorator):
             for likely_ingredient in likely_ingredients
         ]
 
-    def process_result_value(self, likely_ingredients_row, dialect):
-        if likely_ingredients_row is None:
+    def process_result_value(self, ingredients_row, dialect):
+        if ingredients_row is None:
             return None
 
         return [
-            LikelyIngredient(**likely_ingredient)
-            for likely_ingredient in likely_ingredients_row
+            Ingredient(**likely_ingredient)
+            for likely_ingredient in ingredients_row
         ]
-
-
-@dataclass
-class LikelyIngredient:
-    name: str
-    grams: float
-    calories: int
 
 
 class Meal(Base):
@@ -49,7 +43,7 @@ class Meal(Base):
     protein_grams = mapped_column(Numeric(6, 2), nullable=False)
     carbs_grams = mapped_column(Numeric(6, 2), nullable=False)
     fat_grams = mapped_column(Numeric(6, 2), nullable=False)
-    likely_ingredients = mapped_column(_LikelyIngredients, nullable=False)
+    likely_ingredients = mapped_column(Ingredients, nullable=False)
 
     user_telegram_account_id = mapped_column(BigInteger, nullable=False)
 

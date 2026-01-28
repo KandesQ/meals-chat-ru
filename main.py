@@ -7,7 +7,7 @@ from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from dotenv import load_dotenv
 
-from FlowResolver import FlowResolver
+from usecases.FlowResolver import FlowResolver
 from routes.add_meal import add_meal_router
 from routes.feedback import feedback_router
 from routes.help import help_router
