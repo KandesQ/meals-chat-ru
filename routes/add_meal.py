@@ -53,12 +53,6 @@ async def process_meal(query: types.CallbackQuery):
         meal.updated_at = func.now()
         await session.commit()
 
-    # TODO: убрать и просто подставить список. Другим коммитом
-    formatted_ingredients = [
-        f"{ingredient.name} ({ingredient.grams} г, {ingredient.calories} ккал)"
-        for ingredient in meal.likely_ingredients
-    ]
-
     await query.message.answer(
         render_template(
             "meal.html",
@@ -67,7 +61,7 @@ async def process_meal(query: types.CallbackQuery):
             protein_grams=meal.protein_grams,
             carbs_grams=meal.carbs_grams,
             fat_grams=meal.fat_grams,
-            likely_ingredients=formatted_ingredients
+            likely_ingredients=meal.likely_ingredients
         ),
         parse_mode=ParseMode.HTML
     )
