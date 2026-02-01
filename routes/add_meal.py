@@ -64,6 +64,7 @@ async def process_meal(query: types.CallbackQuery):
             likely_ingredients=meal.likely_ingredients
         ),
         parse_mode=ParseMode.HTML
+        # TODO: добавить кнопку "🚫 удали это"
     )
 
     await query.answer()

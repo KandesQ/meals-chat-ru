@@ -7,6 +7,7 @@ from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from dotenv import load_dotenv
 
+from routes.history import history_router
 from usecases.FlowResolver import FlowResolver
 from routes.add_meal import add_meal_router
 from routes.feedback import feedback_router
@@ -32,6 +33,7 @@ dp.message.outer_middleware(FlowResolver())
 dp.include_router(help_router)
 dp.include_router(add_meal_router)
 dp.include_router(feedback_router)
+dp.include_router(history_router)
 
 
 kb_builder = ReplyKeyboardBuilder()
