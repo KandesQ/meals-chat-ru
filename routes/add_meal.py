@@ -50,6 +50,7 @@ async def process_meal(query: types.CallbackQuery):
             .where(Meal.id == meal_id))
         ).scalar()
 
+        # TODO: вместо обновления даты нужно создавать копию блюда
         meal.updated_at = func.now()
         await session.commit()
 
@@ -64,6 +65,7 @@ async def process_meal(query: types.CallbackQuery):
             likely_ingredients=meal.likely_ingredients
         ),
         parse_mode=ParseMode.HTML
+        # TODO: добавить кнопку "🚫 удали это"
     )
 
     await query.answer()
