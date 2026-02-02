@@ -134,8 +134,7 @@ async def history_right_btn_callback(
     async with async_session_maker() as session:
         meals = (await session.execute(next_meals_st)).scalars().all()
 
-    # Если страница последняя - ничего не делать
-    if callback_data.page_number == ceil(callback_data.total_page_count / _HISTORY_PAGE_LIMIT):
+    if callback_data.page_number == callback_data.total_page_count:
         await callback.answer()
         return
 
