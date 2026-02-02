@@ -5,10 +5,12 @@ from aiogram import BaseMiddleware
 from aiogram.enums import ParseMode
 from aiogram.types import Message
 from dotenv import load_dotenv
+from langsmith.utils import with_cache
 
 from infra import async_session_maker
 from usecases.add_meal_by_photo import add_meal_by_photo
 from usecases.add_meal_by_photo_and_caption import add_meal_by_photo_and_caption
+from usecases.add_meal_by_text import add_meal_by_text
 
 load_dotenv()
 
@@ -105,5 +107,23 @@ class FlowResolver(BaseMiddleware):
         if text in TEXT_COMMANDS or text in COMMANDS:
             return await handler(msg, data)
 
-        # Текстовое описание еды (возможен мусорный текст. Возможно оптимизировать запросы к модели)
-        # TODO: Отправить в нейронку текст на распознавание
+
+        meal_description = msg.text
+
+        analyzing_msg = await msg.answer("🧠 Анализирую...")
+
+        async with async_session_maker() as session:
+            template = add_meal_by_text(
+                msg.from_user.id,
+                meal_description,
+                session)
+            await session.commit()
+
+        await analyzing_msg.delete()
+
+        await msg.answer(
+            template,
+            parse_mode=ParseMode.HTML
+        )
+
+        return None

@@ -19,7 +19,7 @@ SYSTEM_PROMPT = """
     3. Фотографии и тексту вместе
 
 Правила:
- - Если это не еда или напиток: is_food = false и укажи причину в reason
+ - Если это не еда или напиток: is_food = false и укажи причину в reason. Причина будет использоваться в формате "Я не смог провести анализ, потому что {причина}". 
  - Если is_food = false, все остальные поля, кроме reason и is_food, должны быть null
  - Если это еда: is_food = true
  - Порция — средняя для мужчины 25 лет, 75 кг, 178 см
@@ -95,5 +95,29 @@ def recognize_meal_by_photo_and_caption(
     return response.output_parsed
 
 
-# def guess_by_text_description():
-#     pass
+def recognize_meal_by_text_description(meal_description: str) -> MealResult:
+    response = client.responses.parse(
+        model="o4-mini",
+        text_format=MealResult,
+        input=[
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": "Определи блюдо по тексту пользователя"
+                    },
+                    {
+                        "type": "input_text",
+                        "text": f"Текст пользователя: {meal_description}"
+                    }
+                ]
+            }
+        ],
+    )
+
+    return response.output_parsed
