@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 from infra import async_session_maker
 from usecases.add_meal_by_photo import add_meal_by_photo
+from usecases.add_meal_by_photo_and_caption import add_meal_by_photo_and_caption
 
 load_dotenv()
 
@@ -49,7 +50,28 @@ class FlowResolver(BaseMiddleware):
         caption = msg.caption
         photo = msg.photo
         if caption and photo:
-            # TODO: Отправить в нейронку. Проверить еда ли на фото
+            largest_image_id = photo[-1].file_id
+            image = await msg.bot.get_file(largest_image_id)
+            image_url = f"https://api.telegram.org/file/bot{os.getenv("BOT_TOKEN")}/{image.file_path}"
+
+            analyzing_msg = await msg.answer("🧠 Анализирую...")
+
+            async with async_session_maker() as session:
+                template = add_meal_by_photo_and_caption(
+                    msg.from_user.id,
+                    image_url,
+                    caption,
+                    session
+                )
+                await session.commit()
+
+            await analyzing_msg.delete()
+
+            # TODO: добавить кнопки: "👎 Выглядит неправильно", "🚫 удали это"
+            await msg.answer(
+                template,
+                parse_mode=ParseMode.HTML
+            )
             return None
 
         # Только фото

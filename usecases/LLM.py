@@ -60,9 +60,40 @@ def recognize_meal_by_photo(image_url: str) -> MealResult:
     return response.output_parsed
 
 
-# def guess_by_photo_and_caption():
-#     pass
-#
-#
+def recognize_meal_by_photo_and_caption(
+        image_url: str,
+        caption: str,
+):
+    response = client.responses.parse(
+        model="o4-mini",
+        text_format=MealResult,
+        input=[
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": "Определи блюдо по фото и тексту к нему"
+                    },
+                    {
+                        "type": "input_image",
+                        "image_url": image_url
+                    },
+                    {
+                        "type": "input_text",
+                        "text": f"Текст пользователя: {caption}"
+                    }
+                ]
+            }
+        ],
+    )
+
+    return response.output_parsed
+
+
 # def guess_by_text_description():
 #     pass
