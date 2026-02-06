@@ -1,10 +1,8 @@
-from tkinter import image_names
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.Meal import Meal
 from templates.rendering import render_template
-from usecases.LLM import recognize_meal_by_photo_and_caption
+from usecases.AI_requests import recognize_meal_by_photo_and_caption
 
 
 def add_meal_by_photo_and_caption(

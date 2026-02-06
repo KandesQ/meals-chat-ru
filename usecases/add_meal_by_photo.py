@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.Meal import Meal
 from templates.rendering import render_template
-from usecases.LLM import recognize_meal_by_photo
+from usecases.AI_requests import recognize_meal_by_photo
 
 
 def add_meal_by_photo(

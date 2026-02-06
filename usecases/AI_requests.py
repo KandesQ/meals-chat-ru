@@ -4,13 +4,14 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from models.GoalsResult import GoalsResult
 from models.MealResult import MealResult
 
 
 load_dotenv()
 
 
-SYSTEM_PROMPT = """
+MEAL_RECOGNITION_SYSTEM_PROMPT = """
 Ты - русскоязычный диетолог и food-эксперт.
 
 Ты определяешь еду по:
@@ -28,6 +29,7 @@ SYSTEM_PROMPT = """
  - Все должно быть на русском языке
 """
 
+# TODO: Replace with AsyncOpenAI()
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
@@ -39,7 +41,7 @@ def recognize_meal_by_photo(image_url: str) -> MealResult:
         input=[
             {
                 "role": "system",
-                "content": SYSTEM_PROMPT,
+                "content": MEAL_RECOGNITION_SYSTEM_PROMPT,
             },
             {
                 "role": "user",
@@ -70,7 +72,7 @@ def recognize_meal_by_photo_and_caption(
         input=[
             {
                 "role": "system",
-                "content": SYSTEM_PROMPT,
+                "content": MEAL_RECOGNITION_SYSTEM_PROMPT,
             },
             {
                 "role": "user",
@@ -102,7 +104,7 @@ def recognize_meal_by_text_description(meal_description: str) -> MealResult:
         input=[
             {
                 "role": "system",
-                "content": SYSTEM_PROMPT,
+                "content": MEAL_RECOGNITION_SYSTEM_PROMPT,
             },
             {
                 "role": "user",
@@ -114,6 +116,63 @@ def recognize_meal_by_text_description(meal_description: str) -> MealResult:
                     {
                         "type": "input_text",
                         "text": f"Текст пользователя: {meal_description}"
+                    }
+                ]
+            }
+        ],
+    )
+
+    return response.output_parsed
+
+
+GOAlS_SYSTEM_PROMPT = """
+Ты профессиональный нутрициолог и спортивный диетолог.
+
+Твоя задача:
+1. Проанализировать пользовательский ввод.
+2. Определить цель (набор массы, похудение, поддержание, рекомпозиция).
+3. Предложить распределение БЖУ в процентах.
+4. Написать краткое профессиональное заключение (1-2 предложения).
+
+Для ответа не нужно знать полную инфомацию о юзере (например, рост, физ активность, желаемые результы). Определи
+все что нужно по тому что вводит юзер 
+
+Если данных НЕДОСТАТОЧНО:
+- Установи "not_enough_details": true
+- В "not_enough_details_text" кратко укажи, какой информации не хватает
+- НЕ указывай проценты БЖУ (оставь их null)
+- "conclusion_text" должен быть коротким пояснением
+
+Если данных ДОСТАТОЧНО:
+- "not_enough_details": false
+- "not_enough_details_text": null
+- Укажи проценты белков, жиров и углеводов
+- Проценты должны быть целыми числами
+- Сумма процентов должна равняться 100
+
+ВАЖНО:
+- Ответ строго в формате JSON
+- Никакого текста вне JSON
+- Не используй markdown
+- Не жди от пользователя полного ввода. Попытайся вывести итог по введенным данным. Не нагнетай информацией 
+"""
+
+
+def determine_goals(goals_input: str) -> GoalsResult:
+    response = client.responses.parse(
+        model="o4-mini",
+        text_format=GoalsResult,
+        input=[
+            {
+                "role": "system",
+                "content": GOAlS_SYSTEM_PROMPT,
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": f"Ввод пользователя: {goals_input}"
                     }
                 ]
             }

@@ -1,5 +1,6 @@
 import os
 
+from aiogram import Dispatcher
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
@@ -19,3 +20,23 @@ async_session_maker = async_sessionmaker(
     async_engine,
     expire_on_commit=False
 )
+
+
+TEXT_COMMANDS = [
+    "📊 Статистика",
+    "🎯 Цели",
+    "❓ Помощь",
+    "⏱️ История",
+    "✏️ Добавить блюдо"
+]
+COMMANDS = [
+    "/start",
+    "/help",
+    "/add",
+    "/stats",
+    "/goals",
+    "/history",
+    "/feedback"
+]
+
+dp = Dispatcher()

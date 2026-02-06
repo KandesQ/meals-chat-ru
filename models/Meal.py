@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from sqlalchemy import BigInteger, Integer, Numeric, JSON, String, DateTime, func, TypeDecorator, Dialect
 from sqlalchemy.orm import mapped_column
 
