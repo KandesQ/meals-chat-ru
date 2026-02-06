@@ -7,7 +7,9 @@ from aiogram.filters import CommandStart
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from dotenv import load_dotenv
 
+from infra import dp
 from routes.history import history_router
+from routes.goals import goals_router
 from usecases.FlowResolver import FlowResolver
 from routes.add_meal import add_meal_router
 from routes.feedback import feedback_router
@@ -25,8 +27,6 @@ logging.basicConfig(
 
 
 
-dp = Dispatcher()
-
 dp.message.outer_middleware(FlowResolver())
 
 
@@ -34,6 +34,7 @@ dp.include_router(help_router)
 dp.include_router(add_meal_router)
 dp.include_router(feedback_router)
 dp.include_router(history_router)
+dp.include_router(goals_router)
 
 
 kb_builder = ReplyKeyboardBuilder()
